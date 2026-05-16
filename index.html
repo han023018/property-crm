@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文化星匯 CRM — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0E0A8;
+    --gold-dark: #8A6A28;
+    --navy: #1A2744;
+    --navy-mid: #2C3F6A;
+    --navy-light: #E8ECF4;
+    --slate: #4A5568;
+    --muted: #8A95A8;
+    --border: #DDE2EC;
+    --bg: #F5F7FA;
+    --white: #FFFFFF;
+    --success: #2D9E6B;
+    --success-bg: #E8F7EF;
+    --warning: #C47A1E;
+    --warning-bg: #FEF3E0;
+    --info: #2A6EBF;
+    --info-bg: #E8F0FB;
+    --danger: #C0392B;
+    --danger-bg: #FDF0EE;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 2px 12px rgba(26,39,68,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,39,68,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--navy);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Top Nav ── */
+  #top-nav {
+    background: var(--navy);
+    color: white;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+  .nav-brand span {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    margin-left: 4px;
+    letter-spacing: 0;
+    vertical-align: middle;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    font-family: 'Noto Sans TC', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-tab:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-tab.active { background: var(--gold); color: var(--navy); font-weight: 500; }
+  .nav-user { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .nav-user .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--gold); color: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* ── Pages ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Mobile Form ── */
+  #page-mobile {
+    min-height: calc(100vh - 56px);
+    background: linear-gradient(160deg, #1A2744 0%, #2C3F6A 50%, #1A2744 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+  .mobile-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-lg);
+  }
+  .mobile-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .mobile-logo h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--navy);
+    letter-spacing: 2px;
+  }
+  .mobile-logo p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .mobile-logo .logo-bar {
+    width: 40px; height: 3px;
+    background: var(--gold);
+    margin: 10px auto 0;
+    border-radius: 2px;
+  }
+  .welcome-box {
+    background: var(--navy-light);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: var(--navy-mid);
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+    margin-bottom: 6px;
+  }
+  .form-label .req { color: #E24B4A; margin-left: 2px; }
+  .form-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--navy);
+    transition: border-color 0.2s;
+    background: white;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: var(--navy-mid);
+    box-shadow: 0 0 0 3px rgba(44,63,106,0.1);
+  }
+  .form-input.error { border-color: #E24B4A; }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+  .toggle-group { display: flex; gap: 8px; }
+  .toggle-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--slate);
+    background: white;
+    transition: all 0.18s;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .toggle-btn:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .toggle-btn.selected {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+    font-weight: 500;
+  }
+  .section-divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 24px 0 20px;
+  }
+  .optional-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .optional-label::before, .optional-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+  .submit-btn:hover { background: var(--navy-mid); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26,39,68,0.25); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { background: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+  .err-msg { font-size: 12px; color: #E24B4A; margin-top: 4px; display: none; }
+
+  /* Success screen */
+  .success-screen {
+    text-align: center;
+    padding: 20px 0;
+    display: none;
+  }
+  .success-icon {
+    width: 72px; height: 72px;
+    background: var(--success-bg);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+  }
+  .success-screen h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .success-screen p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+  .success-id {
+    display: inline-block;
+    background: var(--navy-light);
+    color: var(--navy);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 16px 0;
+  }
+
+  /* ── CRM Dashboard ── */
+  #page-crm { padding: 24px; }
+
+  /* Login */
+  #crm-login {
+    max-width: 380px;
+    margin: 60px auto;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 40px 36px;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+  #crm-login h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  #crm-login p { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .login-hint {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 16px;
+    text-align: left;
+  }
+
+  /* CRM Main */
+  #crm-main { display: none; }
+  .crm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .crm-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+  }
+  .crm-header p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .btn-logout {
+    padding: 7px 16px;
+    border: 1.5px solid var(--border);
+    background: white;
+    color: var(--slate);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.18s;
+  }
+  .btn-logout:hover { border-color: #E24B4A; color: #E24B4A; }
+
+  /* Stat Cards */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    border-top: 3px solid transparent;
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-card.pending { border-color: var(--warning); }
+  .stat-card.processing { border-color: var(--info); }
+  .stat-card.completed { border-color: var(--success); }
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stat-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .stat-dot.pending { background: var(--warning); }
+  .stat-dot.processing { background: var(--info); }
+  .stat-dot.completed { background: var(--success); }
+  .stat-num { font-size: 32px; font-weight: 700; color: var(--navy); }
+
+  /* Search + Filter */
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .search-box {
+    flex: 1;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 9px 14px 9px 36px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    background: white;
+    color: var(--navy);
+    transition: border-color 0.2s;
+  }
+  .search-box input:focus { outline: none; border-color: var(--navy-mid); }
+  .search-icon {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .filter-select {
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    background: white;
+    color: var(--navy);
+    cursor: pointer;
+  }
+
+  /* Customer Table */
+  .table-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .table-head {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 90px 100px 130px;
+    padding: 12px 20px;
+    background: var(--bg);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .customer-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 90px 100px 130px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .customer-row:last-child { border-bottom: none; }
+  .customer-row:hover { background: #F8F9FC; }
+  .customer-id { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .customer-name { font-weight: 500; color: var(--navy); }
+  .customer-mobile { font-size: 13px; color: var(--slate); }
+  .customer-date { font-size: 12px; color: var(--muted); }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .status-badge.pending { background: var(--warning-bg); color: var(--warning); }
+  .status-badge.processing { background: var(--info-bg); color: var(--info); }
+  .status-badge.completed { background: var(--success-bg); color: var(--success); }
+  .action-btn {
+    padding: 6px 14px;
+    border-radius: 7px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 12px;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    color: var(--slate);
+    transition: all 0.18s;
+  }
+  .action-btn:hover { border-color: var(--navy); color: var(--navy); background: var(--navy-light); }
+  .action-btn.primary { background: var(--navy); color: white; border-color: var(--navy); }
+  .action-btn.primary:hover { background: var(--navy-mid); }
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* ── Tablet Form ── */
+  #page-tablet {
+    min-height: calc(100vh - 56px);
+    background: var(--bg);
+    padding: 32px 24px;
+  }
+  .tablet-container { max-width: 780px; margin: 0 auto; }
+  .tablet-header {
+    background: var(--navy);
+    color: white;
+    border-radius: var(--radius-lg);
+    padding: 24px 32px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tablet-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+  }
+  .tablet-header p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  /* Progress steps */
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 28px;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all 0.3s;
+    z-index: 1;
+  }
+  .step-circle.active { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+  .step-circle.done { background: var(--success); border-color: var(--success); color: white; }
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 -1px;
+    transition: background 0.3s;
+  }
+  .step-line.done { background: var(--success); }
+  .step-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .step-wrapper { display: flex; flex-direction: column; align-items: center; flex: 1; }
+
+  .tablet-step { display: none; }
+  .tablet-step.active { display: block; }
+
+  .tablet-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 28px 32px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .tablet-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .info-item { }
+  .info-item .info-key { font-size: 11px; color: var(--muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-item .info-val { font-size: 14px; color: var(--navy); font-weight: 500; }
+
+  /* Choice groups */
+  .choice-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .choice-label .req-badge {
+    font-size: 10px;
+    background: #FEF3E0;
+    color: var(--warning);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .choices-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .choice-chip {
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 24px;
+    font-size: 13px;
+    color: var(--slate);
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Noto Sans TC', sans-serif;
+    user-select: none;
+    background: white;
+  }
+  .choice-chip:hover { border-color: var(--navy-mid); color: var(--navy); }
+  .choice-chip.selected { background: var(--navy); color: white; border-color: var(--navy); font-weight: 500; }
+  .choice-chip.priority-selected {
+    background: var(--gold-dark);
+    color: white;
+    border-color: var(--gold-dark);
+    font-weight: 500;
+  }
+
+  /* Signature */
+  .sig-canvas {
+    width: 100%;
+    height: 180px;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    cursor: crosshair;
+    background: #FAFBFD;
+    display: block;
+  }
+  .sig-canvas.has-sig { border-color: var(--navy-mid); border-style: solid; }
+  .sig-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .sig-hint { font-size: 12px; color: var(--muted); }
+  .btn-clear {
+    padding: 6px 14px;
+    border: 1.5px solid var(--border);
+    background: white;
+    color: var(--slate);
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .btn-clear:hover { border-color: #E24B4A; color: #E24B4A; }
+
+  /* Nav buttons */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .btn-prev, .btn-next {
+    padding: 12px 28px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-prev {
+    border: 1.5px solid var(--border);
+    background: white;
+    color: var(--slate);
+  }
+  .btn-prev:hover { border-color: var(--slate); }
+  .btn-next {
+    flex: 1;
+    background: var(--navy);
+    color: white;
+    border: none;
+  }
+  .btn-next:hover { background: var(--navy-mid); }
+  .btn-submit-final {
+    flex: 1;
+    padding: 12px;
+    background: var(--success);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+  .btn-submit-final:hover { background: #24875A; }
+
+  .alert-box {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+  .alert-box.error { background: var(--danger-bg); color: var(--danger); }
+  .alert-box.info { background: var(--info-bg); color: var(--info); }
+
+  /* Tablet select prompt */
+  #tablet-select {
+    max-width: 600px;
+    margin: 60px auto;
+    text-align: center;
+  }
+  #tablet-select h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  #tablet-select p { color: var(--muted); margin-bottom: 28px; font-size: 13px; }
+  .customer-pick-list {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .customer-pick-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .customer-pick-row:last-child { border-bottom: none; }
+  .customer-pick-row:hover { background: var(--navy-light); }
+
+  /* modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,39,68,0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 520px;
+    width: 90%;
+    box-shadow: var(--shadow-lg);
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+  .modal-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .modal-box .sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .modal-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .modal-info-row:last-of-type { border-bottom: none; }
+  .modal-info-key { color: var(--muted); }
+  .modal-info-val { color: var(--navy); font-weight: 500; }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .btn-modal-close {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--border);
+    background: white;
+    color: var(--slate);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+  .btn-modal-tablet {
+    flex: 2;
+    padding: 10px;
+    background: var(--navy);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+  }
+  .btn-modal-tablet:hover { background: var(--navy-mid); }
+
+  /* Responsive tweaks */
+  @media (max-width: 640px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .table-head, .customer-row { grid-template-columns: 60px 1fr 90px; }
+    .table-head :nth-child(n+4), .customer-row :nth-child(n+4) { display: none; }
+    .info-grid { grid-template-columns: 1fr; }
+    .tablet-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .mobile-card { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="top-nav">
+  <div class="nav-brand">
+    文化星匯 <span>CRM Prototype v3.0</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('mobile')" id="tab-mobile">📱 手機表單</button>
+    <button class="nav-tab" onclick="showPage('crm')" id="tab-crm">🖥 CRM 後台</button>
+    <button class="nav-tab" onclick="showPage('tablet')" id="tab-tablet">📋 平板表單</button>
+  </div>
+  <div class="nav-user">
+    <span id="nav-user-name" style="font-size:12px;color:rgba(255,255,255,0.6)">示範模式</span>
+    <div class="avatar" id="nav-avatar">示</div>
+  </div>
+</nav>
+
+<!-- ─────────────────── MOBILE FORM ─────────────────── -->
+<div id="page-mobile" class="page active">
+  <div class="mobile-card" id="mobile-form-wrap">
+    <div class="mobile-logo">
+      <h1>文化星匯</h1>
+      <p>CULTURE GALAXY</p>
+      <div class="logo-bar"></div>
+    </div>
+    <div class="welcome-box">✨ 歡迎您！請填寫以下基本資料，我們的服務人員將儘快與您聯繫。</div>
+
+    <!-- 必填 -->
+    <div class="form-group">
+      <label class="form-label">貴賓姓名 <span class="req">*</span></label>
+      <input class="form-input" id="m-name" placeholder="請輸入您的姓名" type="text">
+      <div class="err-msg" id="err-name">請填寫姓名</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">稱謂 <span class="req">*</span></label>
+      <div class="toggle-group">
+        <button class="toggle-btn" onclick="selectToggle(this,'gender')" data-val="先生">先生</button>
+        <button class="toggle-btn" onclick="selectToggle(this,'gender')" data-val="女士">女士</button>
+      </div>
+      <input type="hidden" id="m-gender">
+      <div class="err-msg" id="err-gender">請選擇稱謂</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">手機號碼 <span class="req">*</span></label>
+      <input class="form-input" id="m-mobile" placeholder="09xx-xxx-xxx" type="tel">
+      <div class="err-msg" id="err-mobile">請填寫正確手機號碼</div>
+    </div>
+
+    <hr class="section-divider">
+    <div class="optional-label">以下為選填資料</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">出生年</label>
+        <input class="form-input" id="m-birth-year" placeholder="西元年" type="number" min="1940" max="2010">
+      </div>
+      <div class="form-group">
+        <label class="form-label">月</label>
+        <input class="form-input" id="m-birth-month" placeholder="月" type="number" min="1" max="12">
+      </div>
+      <div class="form-group">
+        <label class="form-label">日</label>
+        <input class="form-input" id="m-birth-day" placeholder="日" type="number" min="1" max="31">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">年齡</label>
+        <input class="form-input" id="m-age" placeholder="請輸入年齡" type="number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">子女人數</label>
+        <input class="form-input" id="m-children" placeholder="人數" type="number" min="0">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">婚姻狀態</label>
+      <div class="toggle-group">
+        <button class="toggle-btn" onclick="selectToggle(this,'marital')" data-val="未婚">未婚</button>
+        <button class="toggle-btn" onclick="selectToggle(this,'marital')" data-val="已婚">已婚</button>
+      </div>
+      <input type="hidden" id="m-marital">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">住家／公司電話</label>
+      <input class="form-input" id="m-phone" placeholder="07-xxx-xxxx" type="tel">
+    </div>
+    <div class="form-group">
+      <label class="form-label">LINE ID</label>
+      <input class="form-input" id="m-line" placeholder="請輸入 LINE ID">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="m-email" placeholder="example@email.com" type="email">
+    </div>
+    <div class="form-group">
+      <label class="form-label">通訊地址</label>
+      <input class="form-input" id="m-address" placeholder="請輸入完整地址">
+    </div>
+
+    <button class="submit-btn" onclick="submitMobileForm()">送出資料</button>
+  </div>
+
+  <div class="mobile-card" id="mobile-success" style="display:none">
+    <div class="success-screen" style="display:block">
+      <div class="success-icon">✅</div>
+      <h2>資料已送出！</h2>
+      <p>感謝您填寫資料<br>我們的服務人員將儘快與您聯繫</p>
+      <div class="success-id" id="success-cid"></div>
+      <p style="font-size:12px;color:#8A95A8;margin-top:8px">請保留此編號以供查詢</p>
+      <button class="submit-btn" style="max-width:240px;margin:24px auto 0" onclick="resetMobileForm()">再填一份</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────── CRM ─────────────────── -->
+<div id="page-crm" class="page">
+
+  <!-- Login -->
+  <div id="crm-login">
+    <h2>管理後台登入</h2>
+    <p>請使用銷售人員帳號登入</p>
+    <div class="form-group">
+      <label class="form-label">帳號</label>
+      <input class="form-input" id="login-user" placeholder="輸入帳號" value="admin">
+    </div>
+    <div class="form-group">
+      <label class="form-label">密碼</label>
+      <input class="form-input" id="login-pass" type="password" placeholder="輸入密碼" value="1234">
+    </div>
+    <div class="err-msg" id="login-err" style="display:none;margin-bottom:8px">帳號或密碼錯誤</div>
+    <button class="submit-btn" onclick="doLogin()">登入</button>
+    <div class="login-hint">
+      示範帳號：<strong>admin</strong> ／ 密碼：<strong>1234</strong>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div id="crm-main">
+    <div class="crm-header">
+      <div>
+        <h2>客戶管理總覽</h2>
+        <p>文化星匯 · 銷售 CRM 系統</p>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">登出</button>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card pending">
+        <div class="stat-label"><div class="stat-dot pending"></div>待處理</div>
+        <div class="stat-num" id="cnt-pending">0</div>
+      </div>
+      <div class="stat-card processing">
+        <div class="stat-label"><div class="stat-dot processing"></div>處理中</div>
+        <div class="stat-num" id="cnt-processing">0</div>
+      </div>
+      <div class="stat-card completed">
+        <div class="stat-label"><div class="stat-dot completed"></div>已完成</div>
+        <div class="stat-num" id="cnt-completed">0</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="搜尋姓名或手機號碼…" oninput="renderTable()" id="crm-search">
+      </div>
+      <select class="filter-select" onchange="renderTable()" id="crm-filter">
+        <option value="">全部狀態</option>
+        <option value="pending">待處理</option>
+        <option value="processing">處理中</option>
+        <option value="completed">已完成</option>
+      </select>
+      <button class="action-btn primary" onclick="addDemoData()">＋ 加示範資料</button>
+    </div>
+
+    <div class="table-card">
+      <div class="table-head">
+        <span>編號</span><span>姓名</span><span>手機</span><span>狀態</span><span>日期</span><span>操作</span>
+      </div>
+      <div id="crm-table-body">
+        <div class="empty-state">
+          <div class="icon">📂</div>
+          <div>尚無客戶資料</div>
+          <div style="font-size:12px;margin-top:6px">請先在手機表單頁面填寫客戶資料，或點擊「加示範資料」</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────── TABLET FORM ─────────────────── -->
+<div id="page-tablet" class="page">
+
+  <!-- Select customer prompt -->
+  <div id="tablet-select">
+    <h2>平板端表單</h2>
+    <p>請從 CRM 後台選擇客戶，或從下方待處理清單選擇</p>
+    <div class="customer-pick-list" id="tablet-pick-list">
+      <div class="empty-state" style="padding:40px">
+        <div>目前無待處理客戶</div>
+        <div style="font-size:12px;margin-top:6px">請先在手機表單填寫資料</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tablet main form -->
+  <div class="tablet-container" id="tablet-main" style="display:none">
+
+    <div class="tablet-header">
+      <div>
+        <h2>貴賓資料確認 &amp; 需求勾選</h2>
+        <p id="tablet-customer-label">客戶：—</p>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;color:rgba(255,255,255,0.5)">步驟</div>
+        <div style="font-size:20px;font-weight:700;color:var(--gold-light)" id="step-num">1 / 4</div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar" id="progress-bar">
+      <div class="step-wrapper">
+        <div class="step-circle active" id="sc1">1</div>
+        <div class="step-label">確認資料</div>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-wrapper">
+        <div class="step-circle" id="sc2">2</div>
+        <div class="step-label">基本需求</div>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-wrapper">
+        <div class="step-circle" id="sc3">3</div>
+        <div class="step-label">購屋需求</div>
+      </div>
+      <div class="step-line" id="sl3"></div>
+      <div class="step-wrapper">
+        <div class="step-circle" id="sc4">4</div>
+        <div class="step-label">簽名確認</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Confirm info -->
+    <div class="tablet-step active" id="tstep-1">
+      <div class="tablet-card">
+        <h3>📋 請確認您的基本資料</h3>
+        <div class="info-grid" id="info-grid"></div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-next" style="flex:1" onclick="goStep(2)">確認無誤，繼續 →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Basic needs -->
+    <div class="tablet-step" id="tstep-2">
+      <div class="tablet-card">
+        <h3>📌 基本資訊</h3>
+
+        <div class="choice-label">1. 資訊來源</div>
+        <div class="choices-wrap" id="ch-media">
+          <div class="choice-chip" onclick="pickSingle(this,'media')">FB</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">IG</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">自由</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">壹蘋</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">591</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">看板</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">DM</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">路過</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">介紹</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">海報</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">POP</div>
+          <div class="choice-chip" onclick="pickSingle(this,'media')">其他</div>
+        </div>
+
+        <div class="choice-label">2. 居住區域</div>
+        <div class="choices-wrap" id="ch-area">
+          <div class="choice-chip" onclick="pickSingle(this,'area')">文化中心</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">武廟</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">亞灣</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">三多商圈</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">新興</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">前金</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">前鎮</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">三民</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">鹽埕</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">鳳山</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">小港</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">鳥松</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">左營</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">楠梓</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">鼓山</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">仁武</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">大社</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">台北</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">台中</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">台南</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">屏東</div>
+          <div class="choice-chip" onclick="pickSingle(this,'area')">其他</div>
+        </div>
+
+        <div class="choice-label">3. 職業</div>
+        <div class="choices-wrap" id="ch-occupation">
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">自營商</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">教職</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">科技業</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">醫療</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">軍警</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">公職</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">製造業</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">營建業</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">金融業</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">服務業</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">上班族</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">家管</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">自由業</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">退休</div>
+          <div class="choice-chip" onclick="pickSingle(this,'occupation')">其他</div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="goStep(1)">← 返回</button>
+        <button class="btn-next" onclick="goStep(3)">下一步 →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Purchase needs -->
+    <div class="tablet-step" id="tstep-3">
+      <div class="tablet-card">
+        <h3>🏠 購屋需求</h3>
+
+        <div class="choice-label">4. 購屋用途</div>
+        <div class="choices-wrap" id="ch-purpose">
+          <div class="choice-chip" onclick="pickSingle(this,'purpose')">首購</div>
+          <div class="choice-chip" onclick="pickSingle(this,'purpose')">換屋</div>
+          <div class="choice-chip" onclick="pickSingle(this,'purpose')">投資</div>
+          <div class="choice-chip" onclick="pickSingle(this,'purpose')">置產</div>
+          <div class="choice-chip" onclick="pickSingle(this,'purpose')">贈與</div>
+          <div class="choice-chip" onclick="pickSingle(this,'purpose')">其他</div>
+        </div>
+
+        <div class="choice-label">5. 房型需求</div>
+        <div class="choices-wrap" id="ch-room_type">
+          <div class="choice-chip" onclick="pickSingle(this,'room_type')">2房1衛</div>
+          <div class="choice-chip" onclick="pickSingle(this,'room_type')">2房雙衛浴</div>
+          <div class="choice-chip" onclick="pickSingle(this,'room_type')">3房2衛</div>
+          <div class="choice-chip" onclick="pickSingle(this,'room_type')">其他</div>
+        </div>
+
+        <div class="choice-label">6. 坪數需求</div>
+        <div class="choices-wrap" id="ch-size">
+          <div class="choice-chip" onclick="pickSingle(this,'size')">20坪以下</div>
+          <div class="choice-chip" onclick="pickSingle(this,'size')">21~25坪</div>
+          <div class="choice-chip" onclick="pickSingle(this,'size')">26~30坪</div>
+          <div class="choice-chip" onclick="pickSingle(this,'size')">31~35坪</div>
+          <div class="choice-chip" onclick="pickSingle(this,'size')">36~40坪</div>
+          <div class="choice-chip" onclick="pickSingle(this,'size')">40坪以上</div>
+        </div>
+
+        <div class="choice-label">7. 購屋預算</div>
+        <div class="choices-wrap" id="ch-budget">
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">1,200萬以下</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">1,201~1,400萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">1,401~1,600萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">1,601~1,800萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">1,801~2,000萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">2,001~2,200萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">2,201~2,400萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">2,401~2,600萬</div>
+          <div class="choice-chip" onclick="pickSingle(this,'budget')">2,600萬以上</div>
+        </div>
+
+        <div class="choice-label">
+          8. 賞屋重點
+          <span class="req-badge">必選 3 項</span>
+          <span id="priority-count" style="font-size:12px;color:var(--muted);font-weight:400">（已選 0 項）</span>
+        </div>
+        <div class="choices-wrap" id="ch-priorities">
+          <div class="choice-chip" onclick="pickPriority(this)">地段價值</div>
+          <div class="choice-chip" onclick="pickPriority(this)">生活環境</div>
+          <div class="choice-chip" onclick="pickPriority(this)">未來捷運</div>
+          <div class="choice-chip" onclick="pickPriority(this)">建材規劃</div>
+          <div class="choice-chip" onclick="pickPriority(this)">建設品牌</div>
+          <div class="choice-chip" onclick="pickPriority(this)">室內規劃</div>
+          <div class="choice-chip" onclick="pickPriority(this)">外觀設計</div>
+          <div class="choice-chip" onclick="pickPriority(this)">明星學區</div>
+          <div class="choice-chip" onclick="pickPriority(this)">安心工法</div>
+          <div class="choice-chip" onclick="pickPriority(this)">安全管理</div>
+          <div class="choice-chip" onclick="pickPriority(this)">公共設施</div>
+          <div class="choice-chip" onclick="pickPriority(this)">防水規劃</div>
+          <div class="choice-chip" onclick="pickPriority(this)">視野景觀</div>
+          <div class="choice-chip" onclick="pickPriority(this)">交通便利</div>
+          <div class="choice-chip" onclick="pickPriority(this)">價格考量</div>
+        </div>
+        <div class="alert-box error" id="priority-err">請剛好選擇 3 項賞屋重點</div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="goStep(2)">← 返回</button>
+        <button class="btn-next" onclick="goStep(4)">下一步 →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Signature -->
+    <div class="tablet-step" id="tstep-4">
+      <div class="tablet-card">
+        <h3>✍️ 簽名確認</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">請在下方欄位親筆簽名，確認以上資料正確</p>
+        <canvas id="sig-canvas" class="sig-canvas"></canvas>
+        <div class="sig-controls">
+          <span class="sig-hint">請使用觸控或滑鼠簽名</span>
+          <button class="btn-clear" onclick="clearSig()">清除重簽</button>
+        </div>
+        <div class="alert-box error" id="sig-err" style="margin-top:12px">請完成簽名後再送出</div>
+
+        <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="form-group">
+            <label class="form-label">服務人員姓名</label>
+            <input class="form-input" id="t-staff" placeholder="請輸入接待人員姓名">
+          </div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-prev" onclick="goStep(3)">← 返回</button>
+        <button class="btn-submit-final" onclick="submitTablet()">✔ 確認送出，完成登記</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Done -->
+    <div class="tablet-step" id="tstep-5">
+      <div class="tablet-card" style="text-align:center;padding:48px 32px">
+        <div style="font-size:56px;margin-bottom:16px">🎉</div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:24px;border:none;padding:0;justify-content:center;color:var(--navy)">資料已完成登記</h3>
+        <p style="color:var(--muted);margin-top:10px;font-size:13px;line-height:1.9">感謝您的配合<br>我們的銷售人員將依據您的需求<br>提供最適合的建議</p>
+        <div style="margin-top:28px;display:flex;gap:12px;justify-content:center">
+          <button class="action-btn primary" onclick="resetTablet()">返回選擇客戶</button>
+          <button class="action-btn" onclick="showPage('crm')">查看 CRM 後台</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Customer detail modal -->
+<div class="modal-overlay" id="customer-modal">
+  <div class="modal-box">
+    <h3 id="modal-customer-name">—</h3>
+    <p class="sub" id="modal-customer-id">客戶編號：—</p>
+    <div id="modal-info-rows"></div>
+    <div class="modal-actions">
+      <button class="btn-modal-close" onclick="closeModal()">關閉</button>
+      <button class="btn-modal-tablet" onclick="openTabletFromModal()">📋 開啟平板表單</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Data Store (localStorage) ───
+const STORE_KEY = 'wh_crm_customers';
+
+function getCustomers() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+  catch { return []; }
+}
+function saveCustomers(arr) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+}
+
+function genId() {
+  const arr = getCustomers();
+  const n = arr.length + 1;
+  return 'C' + String(n).padStart(3, '0');
+}
+
+// ─── Page routing ───
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('tab-' + p).classList.add('active');
+  if (p === 'crm') refreshCRM();
+  if (p === 'tablet') refreshTabletList();
+}
+
+// ─── Toggle group helper ───
+function selectToggle(btn, field) {
+  const grp = btn.closest('.toggle-group');
+  grp.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('m-' + field).value = btn.dataset.val;
+}
+
+// ─── Mobile form ───
+function submitMobileForm() {
+  let ok = true;
+  const name = document.getElementById('m-name').value.trim();
+  const gender = document.getElementById('m-gender').value;
+  const mobile = document.getElementById('m-mobile').value.trim();
+
+  // Validate
+  if (!name) {
+    document.getElementById('err-name').style.display = 'block';
+    document.getElementById('m-name').classList.add('error');
+    ok = false;
+  } else {
+    document.getElementById('err-name').style.display = 'none';
+    document.getElementById('m-name').classList.remove('error');
+  }
+  if (!gender) {
+    document.getElementById('err-gender').style.display = 'block';
+    ok = false;
+  } else {
+    document.getElementById('err-gender').style.display = 'none';
+  }
+  if (!mobile || !/^09/.test(mobile.replace(/[-\s]/g,''))) {
+    document.getElementById('err-mobile').style.display = 'block';
+    document.getElementById('m-mobile').classList.add('error');
+    ok = false;
+  } else {
+    document.getElementById('err-mobile').style.display = 'none';
+    document.getElementById('m-mobile').classList.remove('error');
+  }
+  if (!ok) return;
+
+  const cid = genId();
+  const now = new Date();
+  const customer = {
+    customer_id: cid,
+    customer_name: name,
+    gender,
+    mobile,
+    birth_year: document.getElementById('m-birth-year').value || '',
+    birth_month: document.getElementById('m-birth-month').value || '',
+    birth_day: document.getElementById('m-birth-day').value || '',
+    age: document.getElementById('m-age').value || '',
+    marital_status: document.getElementById('m-marital').value || '',
+    children: document.getElementById('m-children').value || '',
+    phone: document.getElementById('m-phone').value || '',
+    line_id: document.getElementById('m-line').value || '',
+    email: document.getElementById('m-email').value || '',
+    address: document.getElementById('m-address').value || '',
+    status: 'pending',
+    created_at: now.toISOString(),
+    created_display: now.toLocaleDateString('zh-TW'),
+  };
+  const arr = getCustomers();
+  arr.unshift(customer);
+  saveCustomers(arr);
+
+  document.getElementById('mobile-form-wrap').style.display = 'none';
+  document.getElementById('mobile-success').style.display = 'block';
+  document.getElementById('success-cid').textContent = '客戶編號：' + cid;
+}
+
+function resetMobileForm() {
+  document.getElementById('mobile-form-wrap').style.display = 'block';
+  document.getElementById('mobile-success').style.display = 'none';
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-mobile').value = '';
+  document.getElementById('m-gender').value = '';
+  document.getElementById('m-marital').value = '';
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+  ['m-birth-year','m-birth-month','m-birth-day','m-age','m-children','m-phone','m-line','m-email','m-address'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+// ─── CRM ───
+let crmLoggedIn = false;
+let currentModalCid = null;
+
+function doLogin() {
+  const u = document.getElementById('login-user').value;
+  const p = document.getElementById('login-pass').value;
+  if (u === 'admin' && p === '1234') {
+    crmLoggedIn = true;
+    document.getElementById('crm-login').style.display = 'none';
+    document.getElementById('crm-main').style.display = 'block';
+    document.getElementById('nav-user-name').textContent = '管理員';
+    document.getElementById('nav-avatar').textContent = '管';
+    refreshCRM();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  crmLoggedIn = false;
+  document.getElementById('crm-login').style.display = 'block';
+  document.getElementById('crm-main').style.display = 'none';
+  document.getElementById('nav-user-name').textContent = '示範模式';
+  document.getElementById('nav-avatar').textContent = '示';
+}
+
+function refreshCRM() {
+  if (!crmLoggedIn) return;
+  const arr = getCustomers();
+  document.getElementById('cnt-pending').textContent = arr.filter(c => c.status === 'pending').length;
+  document.getElementById('cnt-processing').textContent = arr.filter(c => c.status === 'processing').length;
+  document.getElementById('cnt-completed').textContent = arr.filter(c => c.status === 'completed').length;
+  renderTable();
+}
+
+function renderTable() {
+  const arr = getCustomers();
+  const search = (document.getElementById('crm-search').value || '').toLowerCase();
+  const filter = document.getElementById('crm-filter').value;
+  let data = arr;
+  if (search) data = data.filter(c => c.customer_name.includes(search) || c.mobile.includes(search));
+  if (filter) data = data.filter(c => c.status === filter);
+
+  const body = document.getElementById('crm-table-body');
+  if (data.length === 0) {
+    body.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><div>找不到符合的客戶</div></div>';
+    return;
+  }
+
+  const statusMap = { pending: '待處理', processing: '處理中', completed: '已完成' };
+  body.innerHTML = data.map(c => `
+    <div class="customer-row" onclick="openModal('${c.customer_id}')">
+      <span class="customer-id">${c.customer_id}</span>
+      <span class="customer-name">${c.customer_name} ${c.gender || ''}</span>
+      <span class="customer-mobile">${c.mobile}</span>
+      <span><span class="status-badge ${c.status}">${statusMap[c.status]}</span></span>
+      <span class="customer-date">${c.created_display}</span>
+      <span onclick="event.stopPropagation()">
+        ${c.status === 'pending' ? `<button class="action-btn primary" onclick="event.stopPropagation();openTabletForCid('${c.customer_id}')">📋 處理</button>` : `<button class="action-btn" onclick="event.stopPropagation();openModal('${c.customer_id}')">查看</button>`}
+      </span>
+    </div>
+  `).join('');
+}
+
+function openModal(cid) {
+  const arr = getCustomers();
+  const c = arr.find(x => x.customer_id === cid);
+  if (!c) return;
+  currentModalCid = cid;
+  document.getElementById('modal-customer-name').textContent = c.customer_name + (c.gender ? ' ' + c.gender : '');
+  document.getElementById('modal-customer-id').textContent = '客戶編號：' + cid + '　狀態：' + {pending:'待處理',processing:'處理中',completed:'已完成'}[c.status];
+  const fields = [
+    ['手機', c.mobile], ['婚姻', c.marital_status || '—'], ['生日', [c.birth_year, c.birth_month, c.birth_day].filter(Boolean).join('/') || '—'],
+    ['年齡', c.age || '—'], ['子女', c.children || '—'], ['EMAIL', c.email || '—'],
+    ['LINE ID', c.line_id || '—'], ['電話', c.phone || '—'], ['地址', c.address || '—'],
+  ];
+  if (c.status === 'completed') {
+    fields.push(['資訊來源', c.media || '—'], ['居住區域', c.area || '—'], ['職業', c.occupation || '—'],
+      ['購屋用途', c.purpose || '—'], ['房型', c.room_type || '—'], ['坪數', c.size || '—'],
+      ['預算', c.budget || '—'], ['賞屋重點', (c.priorities || []).join('、') || '—']);
+  }
+  document.getElementById('modal-info-rows').innerHTML = fields.map(([k,v]) => `
+    <div class="modal-info-row"><span class="modal-info-key">${k}</span><span class="modal-info-val">${v}</span></div>
+  `).join('');
+  document.getElementById('customer-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('customer-modal').classList.remove('open');
+}
+
+function openTabletFromModal() {
+  closeModal();
+  if (currentModalCid) openTabletForCid(currentModalCid);
+}
+
+function openTabletForCid(cid) {
+  showPage('tablet');
+  loadTabletCustomer(cid);
+}
+
+function addDemoData() {
+  const demos = [
+    { n:'王大明', g:'先生', m:'0912-345-678', a:'已婚', addr:'高雄市苓雅區文化路100號' },
+    { n:'李小華', g:'女士', m:'0923-456-789', a:'未婚', addr:'高雄市三民區博愛路55號' },
+    { n:'張美玲', g:'女士', m:'0956-111-222', a:'已婚', addr:'高雄市前金區中正四路8號' },
+  ];
+  const arr = getCustomers();
+  const now = new Date();
+  demos.forEach((d, i) => {
+    const n = arr.length + 1;
+    arr.unshift({
+      customer_id: 'C' + String(n + i).padStart(3,'0'),
+      customer_name: d.n,
+      gender: d.g,
+      mobile: d.m,
+      marital_status: d.a,
+      address: d.addr,
+      status: 'pending',
+      created_at: now.toISOString(),
+      created_display: now.toLocaleDateString('zh-TW'),
+    });
+  });
+  saveCustomers(arr);
+  refreshCRM();
+}
+
+// ─── Tablet form ───
+let tabletCid = null;
+let tabletData = {};
+let currentStep = 1;
+let sigCanvas, sigCtx, sigDrawing = false, sigHasContent = false;
+
+function refreshTabletList() {
+  const pending = getCustomers().filter(c => c.status !== 'completed');
+  const list = document.getElementById('tablet-pick-list');
+  if (pending.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="padding:40px"><div>目前無待處理客戶</div><div style="font-size:12px;margin-top:6px">請先在手機表單填寫資料</div></div>';
+    return;
+  }
+  const statusMap = { pending:'待處理', processing:'處理中' };
+  list.innerHTML = pending.map(c => `
+    <div class="customer-pick-row" onclick="loadTabletCustomer('${c.customer_id}')">
+      <div>
+        <div style="font-weight:500;color:var(--navy)">${c.customer_name} ${c.gender || ''}</div>
+        <div style="font-size:12px;color:var(--muted)">${c.customer_id} · ${c.mobile}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="status-badge ${c.status}">${statusMap[c.status]}</span>
+        <span style="color:var(--muted);font-size:18px">›</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function loadTabletCustomer(cid) {
+  const arr = getCustomers();
+  const c = arr.find(x => x.customer_id === cid);
+  if (!c) return;
+  tabletCid = cid;
+  tabletData = {};
+
+  // Update status to processing
+  c.status = 'processing';
+  saveCustomers(arr);
+
+  document.getElementById('tablet-select').style.display = 'none';
+  document.getElementById('tablet-main').style.display = 'block';
+  document.getElementById('tablet-customer-label').textContent = '客戶：' + c.customer_name + '　' + c.customer_id;
+
+  // Fill info grid
+  const fields = [
+    ['姓名', c.customer_name + (c.gender ? ' ' + c.gender : '')],
+    ['手機', c.mobile],
+    ['生日', [c.birth_year, c.birth_month, c.birth_day].filter(Boolean).join('/') || '—'],
+    ['年齡', c.age || '—'],
+    ['婚姻', c.marital_status || '—'],
+    ['子女', c.children || '—'],
+    ['EMAIL', c.email || '—'],
+    ['LINE', c.line_id || '—'],
+  ];
+  document.getElementById('info-grid').innerHTML = fields.map(([k,v]) => `
+    <div class="info-item">
+      <div class="info-key">${k}</div>
+      <div class="info-val">${v}</div>
+    </div>
+  `).join('');
+
+  goStep(1);
+  setTimeout(initSigCanvas, 100);
+}
+
+function goStep(n) {
+  if (n === 4) {
+    // Validate priorities
+    const pCount = document.querySelectorAll('#ch-priorities .priority-selected').length;
+    if (pCount !== 3) {
+      document.getElementById('priority-err').style.display = 'block';
+      // Still allow going to step 3 if coming from step 3
+      if (currentStep === 3) {
+        document.getElementById('priority-err').style.display = 'block';
+        return;
+      }
+    } else {
+      document.getElementById('priority-err').style.display = 'none';
+    }
+    if (currentStep === 3 && pCount !== 3) return;
+  }
+
+  document.querySelectorAll('.tablet-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('tstep-' + n).classList.add('active');
+  currentStep = n;
+  document.getElementById('step-num').textContent = Math.min(n, 4) + ' / 4';
+  updateProgress(n);
+  window.scrollTo(0, 0);
+}
+
+function updateProgress(n) {
+  for (let i = 1; i <= 4; i++) {
+    const sc = document.getElementById('sc' + i);
+    if (i < n) { sc.className = 'step-circle done'; sc.textContent = '✓'; }
+    else if (i === n) { sc.className = 'step-circle active'; sc.textContent = i; }
+    else { sc.className = 'step-circle'; sc.textContent = i; }
+  }
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('sl' + i).className = 'step-line' + (i < n ? ' done' : '');
+  }
+}
+
+function pickSingle(chip, field) {
+  const wrap = chip.closest('.choices-wrap');
+  wrap.querySelectorAll('.choice-chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  tabletData[field] = chip.textContent;
+}
+
+function pickPriority(chip) {
+  const selected = document.querySelectorAll('#ch-priorities .priority-selected');
+  if (chip.classList.contains('priority-selected')) {
+    chip.classList.remove('priority-selected');
+  } else {
+    if (selected.length >= 3) return;
+    chip.classList.add('priority-selected');
+  }
+  const count = document.querySelectorAll('#ch-priorities .priority-selected').length;
+  document.getElementById('priority-count').textContent = '（已選 ' + count + ' 項）';
+  if (count === 3) document.getElementById('priority-err').style.display = 'none';
+}
+
+function initSigCanvas() {
+  sigCanvas = document.getElementById('sig-canvas');
+  if (!sigCanvas) return;
+  sigCtx = sigCanvas.getContext('2d');
+  sigCanvas.width = sigCanvas.offsetWidth;
+  sigCanvas.height = sigCanvas.offsetHeight;
+  sigCtx.strokeStyle = '#1A2744';
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+  sigHasContent = false;
+
+  const getPos = (e) => {
+    const rect = sigCanvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+  };
+  sigCanvas.onmousedown = sigCanvas.ontouchstart = (e) => {
+    e.preventDefault();
+    sigDrawing = true;
+    const p = getPos(e);
+    sigCtx.beginPath();
+    sigCtx.moveTo(p.x, p.y);
+  };
+  sigCanvas.onmousemove = sigCanvas.ontouchmove = (e) => {
+    e.preventDefault();
+    if (!sigDrawing) return;
+    const p = getPos(e);
+    sigCtx.lineTo(p.x, p.y);
+    sigCtx.stroke();
+    sigHasContent = true;
+    sigCanvas.classList.add('has-sig');
+    document.getElementById('sig-err').style.display = 'none';
+  };
+  sigCanvas.onmouseup = sigCanvas.ontouchend = () => { sigDrawing = false; };
+}
+
+function clearSig() {
+  if (!sigCtx) return;
+  sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+  sigHasContent = false;
+  sigCanvas.classList.remove('has-sig');
+}
+
+function submitTablet() {
+  if (!sigHasContent) {
+    document.getElementById('sig-err').style.display = 'block';
+    return;
+  }
+  const priorities = [...document.querySelectorAll('#ch-priorities .priority-selected')].map(c => c.textContent);
+
+  const arr = getCustomers();
+  const c = arr.find(x => x.customer_id === tabletCid);
+  if (!c) return;
+
+  c.status = 'completed';
+  c.media = tabletData.media || '';
+  c.area = tabletData.area || '';
+  c.occupation = tabletData.occupation || '';
+  c.purpose = tabletData.purpose || '';
+  c.room_type = tabletData.room_type || '';
+  c.size = tabletData.size || '';
+  c.budget = tabletData.budget || '';
+  c.priorities = priorities;
+  c.signature = sigCanvas.toDataURL('image/png');
+  c.staff_name = document.getElementById('t-staff').value || '';
+  c.completed_at = new Date().toISOString();
+  saveCustomers(arr);
+
+  goStep(5);
+}
+
+function resetTablet() {
+  tabletCid = null;
+  tabletData = {};
+  document.getElementById('tablet-select').style.display = 'block';
+  document.getElementById('tablet-main').style.display = 'none';
+  document.querySelectorAll('.choice-chip').forEach(c => c.classList.remove('selected', 'priority-selected'));
+  document.getElementById('priority-count').textContent = '（已選 0 項）';
+  clearSig();
+  refreshTabletList();
+}
+
+// Init
+window.onload = () => {
+  // Check if already have login state
+};
+</script>
+</body>
+</html>
