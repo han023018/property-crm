@@ -257,7 +257,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--navy
       <div class="form-group"><label class="form-label">日</label><input class="form-input" id="m-birth-day" placeholder="日" type="number"></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label class="form-label">年齡</label><input class="form-input" id="m-age" placeholder="年齡" type="number"></div>
+      <div class="form-group"><label class="form-label">年齡</label><input class="form-input" id="m-age" placeholder="輸入出生年後自動帶入" type="number" style="background:#f5f7fa;color:var(--muted);" readonly></div>
       <div class="form-group"><label class="form-label">子女人數</label><input class="form-input" id="m-children" placeholder="人數" type="number"></div>
     </div>
     <div class="form-group">
@@ -273,6 +273,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--navy
     <div class="form-group"><label class="form-label">通訊地址</label><input class="form-input" id="m-address" placeholder="請輸入完整地址"></div>
 
     <button class="submit-btn" id="mobile-submit-btn" onclick="submitMobileForm()">送出資料</button>
+    <div id="mobile-firebase-err" style="display:none;margin-top:10px;padding:10px 14px;background:#FDF0EE;color:#C0392B;border-radius:8px;font-size:12px;"></div>
+    <div style="margin-top:12px;padding:10px 14px;background:#E8F0FB;border-radius:8px;font-size:11px;color:#2A6EBF;">
+      ⚠️ 若無法送出，請確認 Firebase Console → Firestore → Rules 已設為 <strong>allow read, write: if true</strong>
+    </div>
   </div>
 
   <div class="mobile-card" id="mobile-success" style="display:none;text-align:center;padding:48px 32px">
@@ -791,7 +795,13 @@ window.submitMobileForm = async () => {
     document.getElementById('mobile-form-wrap').style.display = 'none';
     document.getElementById('mobile-success').style.display = 'block';
     showToast('資料已成功儲存！', 'success');
-  } catch(e) { showToast('送出失敗：'+e.message, 'error'); }
+  } catch(e) {
+    console.error('Firebase error:', e);
+    showToast('送出失敗: ' + e.code + ' ' + e.message, 'error');
+    // Show inline error too
+    const errDiv = document.getElementById('mobile-firebase-err');
+    if (errDiv) { errDiv.style.display='block'; errDiv.textContent='錯誤：'+e.message+'（請確認 Firebase 規則已開放）'; }
+  }
   finally { btn.disabled=false; btn.textContent='送出資料'; showLoading(false); }
 };
 
