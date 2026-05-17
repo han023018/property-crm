@@ -252,7 +252,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--navy
     <div class="optional-label">以下為選填資料</div>
 
     <div class="form-row">
-      <div class="form-group"><label class="form-label">出生年</label><input class="form-input" id="m-birth-year" placeholder="西元年" type="number"></div>
+      <div class="form-group"><label class="form-label">出生年</label><input class="form-input" id="m-birth-year" placeholder="西元年" type="number" oninput="autoCalcAgeM(this)"></div>
       <div class="form-group"><label class="form-label">月</label><input class="form-input" id="m-birth-month" placeholder="月" type="number"></div>
       <div class="form-group"><label class="form-label">日</label><input class="form-input" id="m-birth-day" placeholder="日" type="number"></div>
     </div>
@@ -322,7 +322,72 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--navy
 <!-- ════════════ TABLET ════════════ -->
 <div id="page-tablet" class="page">
   <div id="tablet-select">
-    <h2>平板端表單</h2><p>請從下方待處理清單選擇客戶</p>
+    <h2>平板端表單</h2><p>請從下方選擇客戶，或直接現場新增</p>
+
+    <!-- Quick new customer card -->
+    <div id="tablet-new-card" style="background:white;border-radius:16px;box-shadow:0 2px 12px rgba(26,39,68,0.08);padding:24px 28px;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <div style="font-weight:600;color:var(--navy);font-size:15px;">&#43; 現場快速建檔</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">客戶未提前填單，直接於平板建立</div>
+        </div>
+        <button onclick="toggleNewForm()" id="btn-toggle-new" style="padding:8px 18px;background:var(--gold);color:var(--navy);border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:'Noto Sans TC',sans-serif;cursor:pointer;">展開填寫</button>
+      </div>
+      <div id="tablet-new-form" style="display:none;border-top:1px solid var(--border);padding-top:18px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">姓名 <span class="req">*</span></label>
+            <input class="form-input" id="tn-name" placeholder="貴賓姓名">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">稱謂 <span class="req">*</span></label>
+            <div class="toggle-group">
+              <button class="toggle-btn" onclick="selectToggle(this,'tn-gender')" data-val="先生">先生</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'tn-gender')" data-val="女士">女士</button>
+            </div>
+            <input type="hidden" id="m-tn-gender">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">手機 <span class="req">*</span></label>
+            <input class="form-input" id="tn-mobile" placeholder="09xx-xxx-xxx" type="tel">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">出生年（選填）</label>
+            <input class="form-input" id="tn-birth-year" placeholder="西元年" type="number" oninput="autoCalcAge(this,'tn-age')">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">年齡</label>
+            <input class="form-input" id="tn-age" placeholder="自動計算" type="number" readonly style="background:#f5f7fa;color:var(--muted);">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">婚姻</label>
+            <div class="toggle-group">
+              <button class="toggle-btn" onclick="selectToggle(this,'tn-marital')" data-val="未婚">未婚</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'tn-marital')" data-val="已婚">已婚</button>
+            </div>
+            <input type="hidden" id="m-tn-marital">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">LINE ID</label>
+            <input class="form-input" id="tn-line" placeholder="LINE ID">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="tn-email" placeholder="email@example.com">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:12px;margin-bottom:0">
+          <label class="form-label">通訊地址</label>
+          <input class="form-input" id="tn-address" placeholder="請輸入完整地址">
+        </div>
+        <div id="tn-err" style="display:none;font-size:12px;color:#E24B4A;margin-top:8px;">請填寫姓名、稱謂及手機號碼</div>
+        <button onclick="createAndOpenTablet()" style="width:100%;margin-top:16px;padding:13px;background:var(--navy);color:white;border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:'Noto Sans TC',sans-serif;cursor:pointer;letter-spacing:1px;">&#128203; 建立客戶並開始填寫</button>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px;text-align:left;padding-left:4px;">待處理客戶清單</div>
     <div class="customer-pick-list" id="tablet-pick-list">
       <div class="empty-state" style="padding:40px"><div>目前無待處理客戶</div></div>
     </div>
@@ -576,7 +641,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--navy
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, doc, addDoc, getDocs,
+  getFirestore, collection, doc, addDoc,
   updateDoc, onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -619,9 +684,10 @@ onSnapshot(
   err => showToast('Firebase 錯誤：' + err.message, 'error')
 );
 
-async function genId() {
-  const snap = await getDocs(collection(db, COLL));
-  return 'C' + String(snap.size + 1).padStart(3,'0');
+function genId() {
+  // Use timestamp to avoid needing list permission
+  const ts = Date.now().toString().slice(-6);
+  return 'C' + ts;
 }
 
 // ── Debug bar helper ──
@@ -662,10 +728,23 @@ window.showPage = p => {
   if (p==='tablet') refreshTabletList();
 };
 
+window.autoCalcAgeM = input => {
+  const year = parseInt(input.value);
+  const thisYear = new Date().getFullYear();
+  const ageEl = document.getElementById('m-age');
+  if (year && year > 1900 && year <= thisYear) {
+    ageEl.value = thisYear - year;
+  } else if (!year) {
+    ageEl.value = '';
+  }
+};
+
 window.selectToggle = (btn, field) => {
   btn.closest('.toggle-group').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
-  document.getElementById('m-'+field).value = btn.dataset.val;
+  // Support both 'm-field' and direct 'm-tn-field' id patterns
+  const el = document.getElementById('m-'+field) || document.getElementById(field);
+  if (el) el.value = btn.dataset.val;
 };
 
 // ── Mobile form ──
@@ -689,13 +768,16 @@ window.submitMobileForm = async () => {
   const btn = document.getElementById('mobile-submit-btn');
   btn.disabled=true; btn.textContent='送出中…'; showLoading(true);
   try {
-    const cid = await genId();
+    const cid = genId();
+    // Auto-calc age from birth_year
+    const birthYearVal = document.getElementById('m-birth-year').value;
+    const autoAge = birthYearVal ? String(new Date().getFullYear() - parseInt(birthYearVal)) : document.getElementById('m-age').value || '';
     await addDoc(collection(db, COLL), {
       customer_id: cid, customer_name: name, gender, mobile,
       birth_year:  document.getElementById('m-birth-year').value  || '',
       birth_month: document.getElementById('m-birth-month').value || '',
       birth_day:   document.getElementById('m-birth-day').value   || '',
-      age:         document.getElementById('m-age').value         || '',
+      age:         autoAge,
       marital_status: document.getElementById('m-marital').value  || '',
       children:    document.getElementById('m-children').value    || '',
       line_id:     document.getElementById('m-line').value        || '',
@@ -806,12 +888,9 @@ window.addDemoData = async () => {
     {n:'張美玲',g:'女士',m:'0956-111-222',a:'已婚',addr:'高雄市前金區中正四路8號'},
   ];
   try {
-    const snap = await getDocs(collection(db,COLL));
-    let base = snap.size;
     for (const d of demos) {
-      base++;
       await addDoc(collection(db,COLL),{
-        customer_id:'C'+String(base).padStart(3,'0'),
+        customer_id: genId(),
         customer_name:d.n, gender:d.g, mobile:d.m,
         marital_status:d.a, address:d.addr,
         status:'pending',
@@ -845,6 +924,85 @@ function refreshTabletList() {
       </div>
     </div>`).join('');
 }
+
+window.toggleNewForm = () => {
+  const form = document.getElementById('tablet-new-form');
+  const btn  = document.getElementById('btn-toggle-new');
+  if (form.style.display === 'none') {
+    form.style.display = 'block';
+    btn.textContent = '收起';
+    btn.style.background = 'var(--border)';
+    btn.style.color = 'var(--slate)';
+  } else {
+    form.style.display = 'none';
+    btn.textContent = '展開填寫';
+    btn.style.background = 'var(--gold)';
+    btn.style.color = 'var(--navy)';
+  }
+};
+
+window.autoCalcAge = (input, targetId) => {
+  const year = parseInt(input.value);
+  const thisYear = new Date().getFullYear();
+  const ageEl = document.getElementById(targetId);
+  if (year && year > 1900 && year <= thisYear) {
+    ageEl.value = thisYear - year;
+  } else {
+    ageEl.value = '';
+  }
+};
+
+window.createAndOpenTablet = async () => {
+  const name   = document.getElementById('tn-name').value.trim();
+  const gender = document.getElementById('m-tn-gender').value;
+  const mobile = document.getElementById('tn-mobile').value.trim();
+  if (!name || !gender || !mobile || !/^09/.test(mobile.replace(/[-\s]/g,''))) {
+    document.getElementById('tn-err').style.display = 'block';
+    return;
+  }
+  document.getElementById('tn-err').style.display = 'none';
+  showLoading(true);
+  try {
+    const cid = genId();
+    const birthYear = document.getElementById('tn-birth-year').value;
+    const autoAge = birthYear ? String(new Date().getFullYear() - parseInt(birthYear)) : document.getElementById('tn-age').value || '';
+    await addDoc(collection(db, COLL), {
+      customer_id: cid,
+      customer_name: name, gender, mobile,
+      birth_year: birthYear || '',
+      birth_month: '', birth_day: '',
+      age: autoAge,
+      marital_status: document.getElementById('m-tn-marital').value || '',
+      children: '', line_id: document.getElementById('tn-line').value || '',
+      email: document.getElementById('tn-email').value || '',
+      address: document.getElementById('tn-address').value || '',
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      created_display: new Date().toLocaleDateString('zh-TW'),
+    });
+    // Reset form
+    ['tn-name','tn-mobile','tn-birth-year','tn-age','tn-line','tn-email','tn-address'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('m-tn-gender').value = '';
+    document.getElementById('m-tn-marital').value = '';
+    document.querySelectorAll('#tablet-new-form .toggle-btn').forEach(b => b.classList.remove('selected'));
+    // Wait a tick for onSnapshot to update _customers, then load
+    setTimeout(() => {
+      showLoading(false);
+      const created = _customers.find(c => c.customer_id === cid);
+      if (created) {
+        loadTabletCustomer(cid);
+      } else {
+        // fallback: retry once
+        setTimeout(() => { loadTabletCustomer(cid); }, 800);
+      }
+    }, 600);
+  } catch(e) {
+    showLoading(false);
+    showToast('建檔失敗：' + e.message, 'error');
+  }
+};
 
 window.loadTabletCustomer = async cid => {
   const c = _customers.find(x=>x.customer_id===cid); if(!c) return;
